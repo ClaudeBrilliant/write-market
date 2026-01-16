@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+enum Role {
+  WRITER
+  ADMIN
+}
+
+enum AccountStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum TaskStatus {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  SUBMITTED
+  COMPLETED
+  CANCELLED
+}
+
+enum BidStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+
+enum TransactionType {
+  EARNING
+  WITHDRAWAL
+  BONUS
+  PENALTY
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String
+  isEmailVerified        Boolean   @default(false)
+  firstName      String
+  lastName       String
+  isActive       Boolean         @default(true)
+  role           Role            @default(WRITER)
+
+  // Profile fields
+  phone             String?
+  bio               String?
+  location          String?
+  website           String?
+  linkedIn          String?
+  education         String?
+  skills            String?
+  timezone          String?
+  avatarUrl         String?
+  
+  // Preferences
+  emailNotifications    Boolean @default(true)
+  smsNotifications      Boolean @default(false)
+  notificationLevel     String  @default("ALL")
+  bidNotifications      Boolean @default(true)
+  taskNotifications     Boolean @default(true)
+  paymentNotifications  Boolean @default(true)
+  marketingEmails       Boolean @default(false)
+  emailVerifications EmailVerification[]
+  passwordResets PasswordReset[]
+  status         AccountStatus   @default(PENDING)
+  walletBalance  Decimal         @default(0) @db.Decimal(10, 2)
+  refreshToken   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bids          Bid[]
+  submissions   Submission[]
+  transactions  Transaction[]
+  assignedTasks Task[]        @relation("AssignedWriter")
+
+  @@index([email])
+  @@index([status])
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String     @db.Text
+  subject     String
+  pages       Int
+  deadline    DateTime
+  budget      Decimal    @db.Decimal(10, 2)
+  status      TaskStatus @default(OPEN)
+
+  assignedToId String?
+  assignedTo   User?   @relation("AssignedWriter", fields: [assignedToId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bids        Bid[]
+  submissions Submission[]
+
+  @@index([status])
+  @@index([deadline])
+}
+
+model Bid {
+  id       String    @id @default(uuid())
+  amount   Decimal   @db.Decimal(10, 2)
+  proposal String    @db.Text
+  status   BidStatus @default(PENDING)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([taskId, userId])
+  @@index([status])
+  @@index([userId])
+}
+
+model PasswordReset {
+  id        String   @id @default(uuid())
+  email     String
+  code      Int      @unique
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userId    String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("password_resets")
+}
+
+model Submission {
+  id         String  @id @default(uuid())
+  fileUrl    String?
+  notes      String? @db.Text
+  isApproved Boolean @default(false)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  submittedAt DateTime  @default(now())
+  reviewedAt  DateTime?
+
+  @@index([taskId])
+  @@index([userId])
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  amount      Decimal         @db.Decimal(10, 2)
+  type        TransactionType
+  description String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model EmailVerification {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+

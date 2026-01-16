@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YmU2Njg5MS1iZThhLTRmMDYtYjdkNS1mZjk4OWMyODVmYTIiLCJlbWFpbCI6IndyaXRlcjFAZXhhbXBsZS5jb20iLCJyb2xlIjoiV1JJVEVSIiwiaWF0IjoxNzY4MTQwMTY1LCJleHAiOjE3NjgxNDEwNjV9.vtMP5HxJR062XmxE19R4yRbxq5C_1H3jkSQrvl1cnGE
+
+
+### GET ALL USERS
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
+
+### GET USER BY ID
+GET {{baseUrl}}/users/user-uuid-here
+Authorization: Bearer {{token}}
+
+
+### UPDATE USER
+PUT {{baseUrl}}/users/user-uuid-here
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstName": "Claude",
+  "lastName": "Nyongesa",
+  "role": "ADMIN"
+}
+
+
+### SOFT DELETE USER
+PATCH {{baseUrl}}/users/user-uuid-here/soft-delete
+Authorization: Bearer {{token}}
+
+
+### HARD DELETE USER
+DELETE {{baseUrl}}/users/user-uuid-here
+Authorization: Bearer {{token}}

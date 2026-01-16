@@ -1,0 +1,54 @@
+### VARIABLES
+
+@baseUrl = http://localhost:3000
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNzYwNjBmMy1lOTY0LTQ1OTEtYjc1NC1kYjMwZjRkM2QzMTEiLCJlbWFpbCI6ImNsYXVkZWJyaWxsaWFudEBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjgyNjUzMDIsImV4cCI6MTc2ODI2NjIwMn0.OIVuwgc6pUY2pZ1U9JW0CxAm6yCaw2uhxeMnTRDuXMI
+
+### CREATE TASK (ADMIN ONLY)
+POST {{baseUrl}}/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "Write blog article",
+  "description": "Write a 1500-word SEO article",
+  "budget": 50,
+  "deadline": "2026-01-20",
+  "subject": "Environmental blog",
+  "pages": 2
+
+
+}
+
+
+### GET ALL TASKS
+GET {{baseUrl}}/tasks
+Authorization: Bearer {{authToken}}
+
+### GET TASKS BY STATUS
+GET {{baseUrl}}/tasks?status=OPEN
+Authorization: Bearer {{authToken}}
+
+
+### GET AVAILABLE TASKS (WRITER ONLY)
+GET {{baseUrl}}/tasks/available
+Authorization: Bearer {{authToken}}
+
+
+### GET TASK BY ID
+GET {{baseUrl}}/tasks/1
+Authorization: Bearer {{authToken}}
+
+### UPDATE TASK (ADMIN ONLY)
+PATCH {{baseUrl}}/tasks/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "Updated task title",
+  "budget": 75,
+  "status": "IN_PROGRESS"
+}
+
+### DELETE TASK (ADMIN ONLY)
+DELETE {{baseUrl}}/tasks/1
+Authorization: Bearer {{authToken}}

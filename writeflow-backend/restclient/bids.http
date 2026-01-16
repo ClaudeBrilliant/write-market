@@ -1,0 +1,133 @@
+### Variables
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YmU2Njg5MS1iZThhLTRmMDYtYjdkNS1mZjk4OWMyODVmYTIiLCJlbWFpbCI6IndyaXRlcjFAZXhhbXBsZS5jb20iLCJyb2xlIjoiV1JJVEVSIiwiaWF0IjoxNzY4MjY4OTY4LCJleHAiOjE3NjgzNTUzNjh9.JqUQVDz1LcBMPykwlhTawwLqDK7OVN0VqrqAkLOPJK0
+@taskId = 73ff60dd-6f7d-4093-9cc3-fcc482b726ea
+@bidId = 285e51ea-6195-4640-9be6-2ce25cd214ee
+
+### 1. Create a Bid
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "{{taskId}}",
+  "amount": 150.00,
+  "proposal": "I have 5 years of experience in academic writing. I specialize in research papers and can deliver high-quality work before your deadline. I've completed over 200 similar projects with excellent feedback."
+}
+
+### 2. Get My Bids (All bids placed by current user)
+GET {{baseUrl}}/bids/my-bids
+Authorization: Bearer {{token}}
+
+### 3. Get All Bids for a Specific Task
+GET {{baseUrl}}/bids/task/{{taskId}}
+Authorization: Bearer {{token}}
+
+### 4. Approve a Bid (Task Owner Only)
+PATCH {{baseUrl}}/bids/{{bidId}}/approve
+Authorization: Bearer {{token}}
+
+### 5. Reject a Bid (Task Owner Only)
+PATCH {{baseUrl}}/bids/{{bidId}}/reject
+Authorization: Bearer {{token}}
+
+### 6. Withdraw a Bid (Bid Owner Only)
+DELETE {{baseUrl}}/bids/{{bidId}}
+Authorization: Bearer {{token}}
+
+### EXAMPLE SCENARIOS
+
+### Scenario 1: Writer places a competitive bid
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "550e8400-e29b-41d4-a716-446655440000",
+  "amount": 120.00,
+  "proposal": "Hello! I'm a professional academic writer with expertise in Psychology. I can complete your 10-page research paper within 3 days with proper citations and formatting."
+}
+
+### Scenario 2: Writer places another bid on different task
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "550e8400-e29b-41d4-a716-446655440001",
+  "amount": 200.00,
+  "proposal": "I specialize in technical writing and have completed similar projects in Computer Science. I guarantee plagiarism-free content with proper references."
+}
+
+### Scenario 3: Check all my active bids
+GET {{baseUrl}}/bids/my-bids
+Authorization: Bearer {{token}}
+
+### Scenario 4: Task owner reviews all bids for their task
+GET {{baseUrl}}/bids/task/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer {{token}}
+
+### Scenario 5: Task owner approves the best bid
+PATCH {{baseUrl}}/bids/660e8400-e29b-41d4-a716-446655440000/approve
+Authorization: Bearer {{token}}
+
+### Scenario 6: Writer withdraws bid before approval
+DELETE {{baseUrl}}/bids/660e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer {{token}}
+
+### Scenario 7: Task owner rejects a bid
+PATCH {{baseUrl}}/bids/660e8400-e29b-41d4-a716-446655440001/reject
+Authorization: Bearer {{token}}
+
+### ERROR SCENARIOS (Testing validation)
+
+
+### Error: Duplicate bid (trying to bid twice on same task)
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "550e8400-e29b-41d4-a716-446655440000",
+  "amount": 100.00,
+  "proposal": "Another attempt"
+}
+# Expected: 409 Conflict - "You have already placed a bid on this task"
+
+### Error: Invalid amount 
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "550e8400-e29b-41d4-a716-446655440000",
+  "amount": 0,
+  "proposal": "Invalid bid"
+}
+# Expected: 400 Bad Request - Validation error
+
+### Error: Missing required fields
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "550e8400-e29b-41d4-a716-446655440000"
+}
+# Expected: 400 Bad Request - Missing amount and proposal
+
+### Error: Unauthorized (no token)
+GET {{baseUrl}}/bids/my-bids
+# Expected: 401 Unauthorized
+
+### Error: Bidding on non-existent task
+POST {{baseUrl}}/bids
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskId": "non-existent-task-id",
+  "amount": 100.00,
+  "proposal": "Testing"
+}
+# Expected: 404 Not Found - "Task not found"
