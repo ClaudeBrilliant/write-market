@@ -1,0 +1,36 @@
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNzYwNjBmMy1lOTY0LTQ1OTEtYjc1NC1kYjMwZjRkM2QzMTEiLCJlbWFpbCI6ImNsYXVkZWJyaWxsaWFudEBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjgyNjUzMDIsImV4cCI6MTc2ODI2NjIwMn0.OIVuwgc6pUY2pZ1U9JW0CxAm6yCaw2uhxeMnTRDuXMI
+### Get Admin Dashboard Data
+GET {{baseUrl}}/admin/dashboard
+Authorization: Bearer {{token}}
+
+
+
+### Get Platform Statistics
+GET {{baseUrl}}/admin/statistics?from=2025-01-01&to=2025-01-31
+Authorization: Bearer {{token}}
+
+
+### Get All Users
+GET {{baseUrl}}/admin/users
+Authorization: Bearer {{token}}
+
+
+### Get Users by Status
+GET {{baseUrl}}/admin/users?status=ACTIVE
+Authorization: Bearer {{token}}
+
+
+### Update User Account Status
+PATCH {{baseUrl}}/admin/users/USER_ID_HERE/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "SUSPENDED"
+}
+
+
+### Get Revenue Statistics
+GET {{baseUrl}}/admin/revenue?from=2025-01-01&to=2025-01-31
+Authorization: Bearer {{token}}

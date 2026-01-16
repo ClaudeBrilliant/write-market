@@ -1,0 +1,61 @@
+@baseUrl = http://localhost:3000
+@json = application/json
+
+
+### Register User
+POST {{baseUrl}}/auth/register
+Content-Type: {{json}}
+
+{
+  "email": "writer1@example.com",
+  "password": "Password123!",
+  "firstName": "Claude",
+  "lastName": "Nyongesa",
+  "phone": "+254712345678",
+  "role": "WRITER"
+}
+
+### verify email
+POST /auth/verify-email
+{
+  "token": "0d61c488e37333186edfd5fe59d7430952950c816358fb46988d2a13bc355c35"
+}
+
+### resend verification
+{
+  "email": "writer1@example.com"
+}
+
+
+
+### Login User
+POST {{baseUrl}}/auth/login
+Content-Type: {{json}}
+
+{
+  "email": "writer1@example.com",
+  "password": "Password123!"
+}
+
+
+### Register User
+POST {{baseUrl}}/auth/register
+Content-Type: {{json}}
+
+{
+  "email": "claudebrilliant@gmail.com",
+  "password": "Password123!",
+  "firstName": "Claude",
+  "lastName": "Nyongesa",
+  "phone": "+254726698995",
+  "role": "ADMIN"
+}
+
+### Login Admin
+POST {{baseUrl}}/auth/login
+Content-Type: {{json}}
+
+{
+  "email": "claudebrilliant@gmail.com",
+  "password": "Password123!"
+}

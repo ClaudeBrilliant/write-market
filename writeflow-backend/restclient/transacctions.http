@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNzYwNjBmMy1lOTY0LTQ1OTEtYjc1NC1kYjMwZjRkM2QzMTEiLCJlbWFpbCI6ImNsYXVkZWJyaWxsaWFudEBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjgyNjUzMDIsImV4cCI6MTc2ODI2NjIwMn0.OIVuwgc6pUY2pZ1U9JW0CxAm6yCaw2uhxeMnTRDuXMI
+### CREATE TRANSACTION (ADMIN)
+POST {{baseUrl}}/transactions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": "7be66891-be8a-4f06-b7d5-ff989c285fa2",
+  "amount": 150.00,
+  "type": "EARNING",
+  "description": "Task completion payment"
+}
+
+
+
+### GET ALL TRANSACTIONS
+### ADMIN → all users
+### WRITER → only own transactions
+GET {{baseUrl}}/transactions
+Authorization: Bearer {{token}}
+
+### FILTER TRANSACTIONS
+GET {{baseUrl}}/transactions?type=EARNING&from=2025-01-01&to=2025-01-31
+Authorization: Bearer {{token}}
+
+
+
+### GET MY TRANSACTIONS (WRITER)
+GET {{baseUrl}}/transactions/my-transactions
+Authorization: Bearer {{token}}
+
+
+
+### FILTER MY TRANSACTIONS
+GET {{baseUrl}}/transactions/my-transactions?type=WITHDRAWAL
+Authorization: Bearer {{token}}

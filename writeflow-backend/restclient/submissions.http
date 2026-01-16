@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:3000
+@token = YOUR_JWT_TOKEN
+
+
+### SUBMIT WORK (WRITER)
+POST {{baseUrl}}/submissions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "taskId": "task-uuid",
+  "fileUrl": "https://res.cloudinary.com/demo/raw/upload/v1/work.pdf",
+  "notes": "Task completed as requested."
+}
+
+
+### GET MY SUBMISSIONS (WRITER)
+GET {{baseUrl}}/submissions/my-submissions
+Authorization: Bearer {{token}}
+
+
+### DELETE MY SUBMISSION (WRITER)
+DELETE {{baseUrl}}/submissions/submission-id
+Authorization: Bearer {{token}}
+
+
+### GET ALL SUBMISSIONS (ADMIN)
+GET {{baseUrl}}/submissions
+Authorization: Bearer {{token}}
+
+
+### GET SUBMISSIONS BY TASK (ADMIN)
+GET {{baseUrl}}/submissions/task/task-id
+Authorization: Bearer {{token}}
+
+
+### GET SINGLE SUBMISSION (ADMIN)
+GET {{baseUrl}}/submissions/submission-id
+Authorization: Bearer {{token}}
+
+
+### REVIEW SUBMISSION (ADMIN)
+PATCH {{baseUrl}}/submissions/submission-id/review
+Authorization: Bearer {{token}}
+Content-Type: application/jsonfeat(submissions): add writer submission and admin approval workflow
+
+
+{
+  "isApproved": true
+}
+
